@@ -59,7 +59,7 @@ namespace codesofttool
             try
             {
                 chromeBrowser.LoadString(this.makeHtml(), "http://google.com");
-                // chromeBrowser.ShowDevTools();
+             //    chromeBrowser.ShowDevTools();
             }
             catch (Exception ex)
             {
