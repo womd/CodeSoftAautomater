@@ -46,5 +46,29 @@ namespace codesofttool.Properties {
                 this["JobFilePattern"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\temp")]
+        public string LabFilesPath {
+            get {
+                return ((string)(this["LabFilesPath"]));
+            }
+            set {
+                this["LabFilesPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PrinterName {
+            get {
+                return ((string)(this["PrinterName"]));
+            }
+            set {
+                this["PrinterName"] = value;
+            }
+        }
     }
 }

@@ -31,18 +31,25 @@
             this.buttonSaveSampleXml = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.textBoxSourcesFolder = new System.Windows.Forms.TextBox();
-            this.btnSetFolder = new System.Windows.Forms.Button();
+            this.btnSetWatchFolder = new System.Windows.Forms.Button();
             this.textBoxJobFilePattern = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.labelStatus = new System.Windows.Forms.Label();
+            this.dataGridViewLogs = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxLabFilesPath = new System.Windows.Forms.TextBox();
+            this.btnSetLabFolder = new System.Windows.Forms.Button();
+            this.textBoxPrinter = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.buttonSelectPrinter = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonSaveSampleXml
             // 
-            this.buttonSaveSampleXml.Location = new System.Drawing.Point(415, 37);
+            this.buttonSaveSampleXml.Location = new System.Drawing.Point(415, 78);
             this.buttonSaveSampleXml.Name = "buttonSaveSampleXml";
-            this.buttonSaveSampleXml.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveSampleXml.Size = new System.Drawing.Size(97, 23);
             this.buttonSaveSampleXml.TabIndex = 1;
             this.buttonSaveSampleXml.Text = "save sample xml";
             this.buttonSaveSampleXml.UseVisualStyleBackColor = true;
@@ -50,24 +57,24 @@
             // 
             // textBoxSourcesFolder
             // 
-            this.textBoxSourcesFolder.Location = new System.Drawing.Point(91, 13);
+            this.textBoxSourcesFolder.Location = new System.Drawing.Point(130, 6);
             this.textBoxSourcesFolder.Name = "textBoxSourcesFolder";
-            this.textBoxSourcesFolder.Size = new System.Drawing.Size(318, 20);
+            this.textBoxSourcesFolder.Size = new System.Drawing.Size(279, 20);
             this.textBoxSourcesFolder.TabIndex = 2;
             // 
-            // btnSetFolder
+            // btnSetWatchFolder
             // 
-            this.btnSetFolder.Location = new System.Drawing.Point(415, 10);
-            this.btnSetFolder.Name = "btnSetFolder";
-            this.btnSetFolder.Size = new System.Drawing.Size(128, 23);
-            this.btnSetFolder.TabIndex = 3;
-            this.btnSetFolder.Text = "Ordner auswählen";
-            this.btnSetFolder.UseVisualStyleBackColor = true;
-            this.btnSetFolder.Click += new System.EventHandler(this.btnSetFolder_Click);
+            this.btnSetWatchFolder.Location = new System.Drawing.Point(415, 4);
+            this.btnSetWatchFolder.Name = "btnSetWatchFolder";
+            this.btnSetWatchFolder.Size = new System.Drawing.Size(128, 23);
+            this.btnSetWatchFolder.TabIndex = 3;
+            this.btnSetWatchFolder.Text = "select";
+            this.btnSetWatchFolder.UseVisualStyleBackColor = true;
+            this.btnSetWatchFolder.Click += new System.EventHandler(this.btnSetFolder_Click);
             // 
             // textBoxJobFilePattern
             // 
-            this.textBoxJobFilePattern.Location = new System.Drawing.Point(91, 39);
+            this.textBoxJobFilePattern.Location = new System.Drawing.Point(98, 81);
             this.textBoxJobFilePattern.Name = "textBoxJobFilePattern";
             this.textBoxJobFilePattern.Size = new System.Drawing.Size(100, 20);
             this.textBoxJobFilePattern.TabIndex = 4;
@@ -75,45 +82,114 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.Size = new System.Drawing.Size(109, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Quelle:";
+            this.label1.Text = "watch for changes in:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 44);
+            this.label2.Location = new System.Drawing.Point(12, 84);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 13);
+            this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Job-FilePattern";
+            this.label2.Text = "job-file-pattern:";
             // 
-            // labelStatus
+            // dataGridViewLogs
             // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(16, 77);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(0, 13);
-            this.labelStatus.TabIndex = 7;
+            this.dataGridViewLogs.AllowUserToAddRows = false;
+            this.dataGridViewLogs.AllowUserToDeleteRows = false;
+            this.dataGridViewLogs.AllowUserToOrderColumns = true;
+            this.dataGridViewLogs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewLogs.ColumnHeadersVisible = false;
+            this.dataGridViewLogs.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dataGridViewLogs.Location = new System.Drawing.Point(0, 115);
+            this.dataGridViewLogs.MaximumSize = new System.Drawing.Size(548, 146);
+            this.dataGridViewLogs.MinimumSize = new System.Drawing.Size(548, 146);
+            this.dataGridViewLogs.Name = "dataGridViewLogs";
+            this.dataGridViewLogs.Size = new System.Drawing.Size(548, 146);
+            this.dataGridViewLogs.TabIndex = 7;
+            this.dataGridViewLogs.VirtualMode = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(113, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "search for *.lab files in:";
+            // 
+            // textBoxLabFilesPath
+            // 
+            this.textBoxLabFilesPath.Location = new System.Drawing.Point(130, 28);
+            this.textBoxLabFilesPath.Name = "textBoxLabFilesPath";
+            this.textBoxLabFilesPath.Size = new System.Drawing.Size(279, 20);
+            this.textBoxLabFilesPath.TabIndex = 9;
+            // 
+            // btnSetLabFolder
+            // 
+            this.btnSetLabFolder.Location = new System.Drawing.Point(415, 26);
+            this.btnSetLabFolder.Name = "btnSetLabFolder";
+            this.btnSetLabFolder.Size = new System.Drawing.Size(128, 23);
+            this.btnSetLabFolder.TabIndex = 10;
+            this.btnSetLabFolder.Text = "select";
+            this.btnSetLabFolder.UseVisualStyleBackColor = true;
+            this.btnSetLabFolder.Click += new System.EventHandler(this.btnSelectLabFiles);
+            // 
+            // textBoxPrinter
+            // 
+            this.textBoxPrinter.Location = new System.Drawing.Point(130, 51);
+            this.textBoxPrinter.Name = "textBoxPrinter";
+            this.textBoxPrinter.Size = new System.Drawing.Size(279, 20);
+            this.textBoxPrinter.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(64, 51);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(59, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "use printer:";
+            // 
+            // buttonSelectPrinter
+            // 
+            this.buttonSelectPrinter.Location = new System.Drawing.Point(415, 48);
+            this.buttonSelectPrinter.Name = "buttonSelectPrinter";
+            this.buttonSelectPrinter.Size = new System.Drawing.Size(128, 23);
+            this.buttonSelectPrinter.TabIndex = 13;
+            this.buttonSelectPrinter.Text = "select";
+            this.buttonSelectPrinter.UseVisualStyleBackColor = true;
+            this.buttonSelectPrinter.Click += new System.EventHandler(this.buttonSelectPrinter_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 121);
-            this.Controls.Add(this.labelStatus);
+            this.ClientSize = new System.Drawing.Size(548, 261);
+            this.Controls.Add(this.buttonSelectPrinter);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBoxPrinter);
+            this.Controls.Add(this.btnSetLabFolder);
+            this.Controls.Add(this.textBoxLabFilesPath);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.dataGridViewLogs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxJobFilePattern);
-            this.Controls.Add(this.btnSetFolder);
+            this.Controls.Add(this.btnSetWatchFolder);
             this.Controls.Add(this.textBoxSourcesFolder);
             this.Controls.Add(this.buttonSaveSampleXml);
-            this.MaximumSize = new System.Drawing.Size(584, 160);
-            this.MinimumSize = new System.Drawing.Size(584, 160);
+            this.MaximumSize = new System.Drawing.Size(564, 800);
+            this.MinimumSize = new System.Drawing.Size(564, 300);
             this.Name = "Form1";
             this.Text = "CodeSoftTool";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,11 +199,17 @@
         private System.Windows.Forms.Button buttonSaveSampleXml;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.TextBox textBoxSourcesFolder;
-        private System.Windows.Forms.Button btnSetFolder;
+        private System.Windows.Forms.Button btnSetWatchFolder;
         private System.Windows.Forms.TextBox textBoxJobFilePattern;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.DataGridView dataGridViewLogs;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxLabFilesPath;
+        private System.Windows.Forms.Button btnSetLabFolder;
+        private System.Windows.Forms.TextBox textBoxPrinter;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonSelectPrinter;
     }
 }
 

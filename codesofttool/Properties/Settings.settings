@@ -8,5 +8,11 @@
     <Setting Name="JobFilePattern" Type="System.String" Scope="User">
       <Value Profile="(Default)">printJob$</Value>
     </Setting>
+    <Setting Name="LabFilesPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\temp</Value>
+    </Setting>
+    <Setting Name="PrinterName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
