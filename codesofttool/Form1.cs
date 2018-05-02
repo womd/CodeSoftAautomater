@@ -115,6 +115,16 @@ namespace codesofttool
             }
         }
 
+        public async Task LogLocal(string message, EnumLogType type)
+        {
+            LogMessages.Add(new LogMessage()
+            {
+                LogTime = System.DateTime.Now.ToString("h:mm:ss tt"),
+                Message = message,
+                Type = type
+            });
+        }
+
         public async Task Log(string message, EnumLogType type)
         {
 
@@ -232,7 +242,9 @@ namespace codesofttool
                 textBoxLabFilesPath.Text = Properties.Settings.Default.LabFilesPath;
                 textBoxPrinter.Text = Properties.Settings.Default.PrinterName;
                 watch(Properties.Settings.Default.SourcesFolderPath);
-                Log("ready, watching: " + Properties.Settings.Default.SourcesFolderPath,EnumLogType.Info);
+
+
+                LogLocal("ready, watching: " + Properties.Settings.Default.SourcesFolderPath,EnumLogType.Info);
             }
             catch(Exception ex)
             {
