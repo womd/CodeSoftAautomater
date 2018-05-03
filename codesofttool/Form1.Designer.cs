@@ -105,7 +105,6 @@
             this.dataGridViewLogs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewLogs.ColumnHeadersVisible = false;
-            this.dataGridViewLogs.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridViewLogs.Location = new System.Drawing.Point(0, 115);
             this.dataGridViewLogs.MaximumSize = new System.Drawing.Size(548, 146);
             this.dataGridViewLogs.MinimumSize = new System.Drawing.Size(548, 146);
@@ -184,7 +183,7 @@
             this.Controls.Add(this.btnSetWatchFolder);
             this.Controls.Add(this.textBoxSourcesFolder);
             this.Controls.Add(this.buttonSaveSampleXml);
-            this.MaximumSize = new System.Drawing.Size(564, 800);
+            this.MaximumSize = new System.Drawing.Size(564, 300);
             this.MinimumSize = new System.Drawing.Size(564, 300);
             this.Name = "Form1";
             this.Text = "CodeSoftTool";

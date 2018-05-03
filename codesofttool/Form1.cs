@@ -101,11 +101,12 @@ namespace codesofttool
                     catch (Exception ex)
                     {
                         Log("Error executing print: " + ex.Message, EnumLogType.Error);
+                        MoveFileToFailed(fileInfo);
 
                     }
 
-                       System.IO.File.Delete(fileInfo.FullName);
-
+                    //  System.IO.File.Delete(fileInfo.FullName);
+                    MoveFileToArchive(fileInfo);
                 }
                 else
                 {
@@ -114,6 +115,32 @@ namespace codesofttool
 
             }
         }
+
+        private void MoveFileToArchive(FileInfo file)
+        {
+            var now = System.DateTime.Now;
+            string archivepath = Path.Combine(Properties.Settings.Default.SourcesFolderPath, "archive");
+            if (!System.IO.Directory.Exists(archivepath))
+            {
+                System.IO.Directory.CreateDirectory(archivepath);
+            }
+            var targetfilename = file.Name + "__" + now.Year + now.Month + now.Day + "_" + now.Hour + now.Minute + now.Second;
+            System.IO.File.Move(file.FullName, archivepath + "\\" + targetfilename);
+        }
+
+        private void MoveFileToFailed(FileInfo file)
+        {
+            var now = System.DateTime.Now;
+            string archivepath = Path.Combine(Properties.Settings.Default.SourcesFolderPath, "failed");
+            if (!System.IO.Directory.Exists(archivepath))
+            {
+                System.IO.Directory.CreateDirectory(archivepath);
+            }
+            var targetfilename = file.Name + "__" + now.Year + now.Month + now.Day + "_" + now.Hour + now.Minute + now.Second;
+            System.IO.File.Move(file.FullName, archivepath + targetfilename);
+
+        }
+
 
         public async Task LogLocal(string message, EnumLogType type)
         {
@@ -190,6 +217,8 @@ namespace codesofttool
             Log("printing " + job.NrOfCopies + " items on " + strDefaultPrinter, EnumLogType.Error);
             foreach (var vitem in job.Variables)
             {
+                var varInDoc = doc.Variables.Item(vitem.Name);
+                if(varInDoc != null)
                 doc.Variables.Item(vitem.Name).Value = vitem.Value;
             }
 
