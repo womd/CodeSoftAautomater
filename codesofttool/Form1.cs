@@ -22,7 +22,7 @@ namespace codesofttool
     {
         BindingList<LogMessage>LogMessages { get; set; }
         public ChromiumWebBrowser chromeBrowser;
-
+        private System.DateTime lastRead;
 
         public void InitializeChromium()
         {
@@ -78,12 +78,21 @@ namespace codesofttool
             watcher.EnableRaisingEvents = true;
         }
 
+        
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            if (e.ChangeType == WatcherChangeTypes.Changed)
+            if ( e.ChangeType == WatcherChangeTypes.Changed || e.ChangeType == WatcherChangeTypes.Created )
             {
                 if (!File.Exists(e.FullPath))
                     return;
+
+                System.DateTime lastWriteTime = File.GetLastWriteTime(e.FullPath);
+                if (lastWriteTime == lastRead)
+                {
+                    return;
+                }
+
+                lastRead = lastWriteTime;
 
                 var fileInfo = new System.IO.FileInfo(e.FullPath);
                 string acceptpattern = Properties.Settings.Default.JobFilePattern;
@@ -196,35 +205,95 @@ namespace codesofttool
             //string strDefaultPrinter = prtdoc.PrinterSettings.PrinterName;
             string strDefaultPrinter = Properties.Settings.Default.PrinterName;
 
+            string usedprinter = "";
             //Gets the default printer name
             bool foundPrinter = false;
             for (int j = 0; j < allPrinterVars.Count; j++)
             {
                 string[] arryString = allPrinterVars.Item(j).Split(',');
+                if (!string.IsNullOrEmpty(job.PrinterName))
+                {
+                    if (arryString[0] == job.PrinterName)
+                    {
+                        foundPrinter = true;
+                        doc.Printer.SwitchTo(job.PrinterName, arryString[1], true);
+                        usedprinter = job.PrinterName;
+                        break;
+                    }
+                }
                 if (arryString[0] == strDefaultPrinter)
                 {
                     foundPrinter = true;
-                    doc.Printer.SwitchTo( strDefaultPrinter, arryString[1], true);
+                    doc.Printer.SwitchTo(strDefaultPrinter, arryString[1], true);
+                    usedprinter = strDefaultPrinter;
                     break;
                 }
-            }
-            if(foundPrinter == false)
-            {
-                Log("printer: " + strDefaultPrinter + " not installed", EnumLogType.Error);
-                return;
+
             }
 
-            Log("printing " + job.NrOfCopies + " items on " + strDefaultPrinter, EnumLogType.Error);
+
+
+            Log("start processing document", EnumLogType.Debug);
             foreach (var vitem in job.Variables)
             {
+                bool foundvar = false;
                 var varInDoc = doc.Variables.Item(vitem.Name);
                 if(varInDoc != null)
-                doc.Variables.Item(vitem.Name).Value = vitem.Value;
+                {
+                    if(string.IsNullOrEmpty( vitem.Value))
+                        doc.Variables.Remove(vitem.Name);
+                    else
+                        doc.Variables.Item(vitem.Name).Value = vitem.Value;
+
+                    foundvar = true;
+                }
+
+                //look for images
+                if (!foundvar)
+                {
+                    var imgInDoc = doc.DocObjects.Images.Item(vitem.Name);
+                    if (imgInDoc != null)
+                    {
+                        if (string.IsNullOrEmpty(vitem.Value))
+                            imgInDoc.Printable = 0;
+
+                        foundvar = true;
+                    }
+                }
+                //look for texts
+                if (!foundvar)
+                {
+                    var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
+                    if (imgInDoc != null)
+                    {
+                        if (string.IsNullOrEmpty(vitem.Value))
+                            imgInDoc.Printable = 0;
+                        
+                        foundvar = true;
+                    }
+                }
+                //loo for barcodes
+                if (!foundvar)
+                {
+                    var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
+                    if (imgInDoc != null)
+                    {
+                        if (string.IsNullOrEmpty(vitem.Value))
+                            imgInDoc.Printable = 0;
+
+                        foundvar = true;
+                    }
+                }
+
+
+                Log("element not found in document " + vitem.Name , EnumLogType.Debug);
             }
 
-            //var varx2 = doc.Variables.FormVariables.Count;
+            
+            Log("end processing document", EnumLogType.Debug);
 
             //doc.PrintLabel(job.NrOfCopies);
+            Log("printing " + job.NrOfCopies + " items on " + usedprinter, EnumLogType.Info);
             doc.PrintDocument(job.NrOfCopies);
 
             //  PrintDocument pd = new PrintDocument();
@@ -272,7 +341,7 @@ namespace codesofttool
                 textBoxPrinter.Text = Properties.Settings.Default.PrinterName;
                 watch(Properties.Settings.Default.SourcesFolderPath);
 
-
+                lastRead = System.DateTime.MinValue;
                 LogLocal("ready, watching: " + Properties.Settings.Default.SourcesFolderPath,EnumLogType.Info);
             }
             catch(Exception ex)
@@ -296,6 +365,8 @@ namespace codesofttool
                 textBoxSourcesFolder.Text = folderBrowserDialog.SelectedPath;
                 Properties.Settings.Default.SourcesFolderPath = folderBrowserDialog.SelectedPath;
                 Properties.Settings.Default.Save();
+                watcher = null;
+                watch(Properties.Settings.Default.SourcesFolderPath);
             }
         }
 
