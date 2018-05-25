@@ -61,6 +61,7 @@
             this.textBoxSourcesFolder.Name = "textBoxSourcesFolder";
             this.textBoxSourcesFolder.Size = new System.Drawing.Size(279, 20);
             this.textBoxSourcesFolder.TabIndex = 2;
+            this.textBoxSourcesFolder.TextChanged += new System.EventHandler(this.textBoxSourcesFolder_TextChanged);
             // 
             // btnSetWatchFolder
             // 
@@ -78,6 +79,7 @@
             this.textBoxJobFilePattern.Name = "textBoxJobFilePattern";
             this.textBoxJobFilePattern.Size = new System.Drawing.Size(100, 20);
             this.textBoxJobFilePattern.TabIndex = 4;
+            this.textBoxJobFilePattern.TextChanged += new System.EventHandler(this.textBoxJobFilePattern_TextChanged);
             // 
             // label1
             // 

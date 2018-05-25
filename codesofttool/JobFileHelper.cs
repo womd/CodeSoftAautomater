@@ -26,8 +26,8 @@ namespace codesofttool
             subReq.UseDefaultPrinter = true;
             subReq.NrOfCopies = 1;
             subReq.Variables = new List<Variable>();
-            subReq.Variables.Add(new Variable() { Name = "var0", Value = "var 0 valule" });
-            subReq.Variables.Add(new Variable() { Name = "var1", Value = "var 1 value" });
+            subReq.Variables.Add(new Variable() { Name = "var0", Value = "var 0 valule", Printable = true });
+            subReq.Variables.Add(new Variable() { Name = "var1", Value = "var 1 value", Printable = true });
             var xml = "";
 
             using (var sww = new Utf8StringWriter())
@@ -73,6 +73,7 @@ namespace codesofttool
     {
         public string Name { get; set; }
         public string Value { get; set; }
+        public bool Printable { get; set; }
     }
 
 }

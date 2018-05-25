@@ -71,11 +71,20 @@ namespace codesofttool
         FileSystemWatcher watcher = new FileSystemWatcher();
         private void watch(string directory)
         {
-            watcher.Path = directory;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "*.*";
-            watcher.Changed += new FileSystemEventHandler(Watcher_Changed);
-            watcher.EnableRaisingEvents = true;
+            if (!System.IO.Directory.Exists(directory))
+            {
+                Task.Run(() => Log("Directory: " + directory + " does not extis", EnumLogType.Error));
+            }
+            else
+            {
+                watcher.Changed -= new FileSystemEventHandler(Watcher_Changed);
+                watcher.Path = directory;
+                watcher.NotifyFilter = NotifyFilters.LastWrite;
+                watcher.Filter = "*.*";
+                watcher.Changed += new FileSystemEventHandler(Watcher_Changed);
+                watcher.EnableRaisingEvents = true;
+                Task.Run(() => Log("Watching for changes in directory: " + directory, EnumLogType.Info));
+            }
         }
 
         
@@ -240,7 +249,7 @@ namespace codesofttool
                 var varInDoc = doc.Variables.Item(vitem.Name);
                 if(varInDoc != null)
                 {
-                    if(string.IsNullOrEmpty( vitem.Value))
+                    if(string.IsNullOrEmpty( vitem.Value) || vitem.Printable == false)
                         doc.Variables.Remove(vitem.Name);
                     else
                         doc.Variables.Item(vitem.Name).Value = vitem.Value;
@@ -254,7 +263,9 @@ namespace codesofttool
                     var imgInDoc = doc.DocObjects.Images.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
-                        if (string.IsNullOrEmpty(vitem.Value))
+                        if (vitem.Printable)
+                            imgInDoc.Printable = 1;
+                        else
                             imgInDoc.Printable = 0;
 
                         foundvar = true;
@@ -266,7 +277,9 @@ namespace codesofttool
                     var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
-                        if (string.IsNullOrEmpty(vitem.Value))
+                        if (vitem.Printable)
+                            imgInDoc.Printable = 1;
+                        else
                             imgInDoc.Printable = 0;
                         
                         foundvar = true;
@@ -278,9 +291,10 @@ namespace codesofttool
                     var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
-                        if (string.IsNullOrEmpty(vitem.Value))
+                        if (vitem.Printable)
+                            imgInDoc.Printable = 1;
+                        else
                             imgInDoc.Printable = 0;
-
                         foundvar = true;
                     }
                 }
@@ -323,7 +337,8 @@ namespace codesofttool
         public Form1()
         {
             InitializeComponent();
-            InitializeChromium();
+            if(Properties.Settings.Default.MTestEnabled)
+                InitializeChromium();
 
 
             this.LogMessages = new BindingList<LogMessage>();
@@ -342,7 +357,7 @@ namespace codesofttool
                 watch(Properties.Settings.Default.SourcesFolderPath);
 
                 lastRead = System.DateTime.MinValue;
-                LogLocal("ready, watching: " + Properties.Settings.Default.SourcesFolderPath,EnumLogType.Info);
+              
             }
             catch(Exception ex)
             {
@@ -365,8 +380,7 @@ namespace codesofttool
                 textBoxSourcesFolder.Text = folderBrowserDialog.SelectedPath;
                 Properties.Settings.Default.SourcesFolderPath = folderBrowserDialog.SelectedPath;
                 Properties.Settings.Default.Save();
-                watcher = null;
-                watch(Properties.Settings.Default.SourcesFolderPath);
+           //     watch(Properties.Settings.Default.SourcesFolderPath);
             }
         }
 
@@ -422,6 +436,28 @@ namespace codesofttool
                 Properties.Settings.Default.Save();
             }
 
+        }
+
+        private void textBoxSourcesFolder_TextChanged(object sender, EventArgs e)
+        {
+            string strDir = ((TextBox) sender).Text;
+            if (System.IO.Directory.Exists(strDir))
+            {
+                Properties.Settings.Default.SourcesFolderPath = strDir;
+                Properties.Settings.Default.Save();
+                watch(strDir);
+            }
+            else
+            {
+                Task.Run(() => Log(strDir + " is not a directory.", EnumLogType.Error));
+            }
+        }
+
+        private void textBoxJobFilePattern_TextChanged(object sender, EventArgs e)
+        {
+            string strPattern = (sender as TextBox).Text;
+            Properties.Settings.Default.JobFilePattern = strPattern;
+            Properties.Settings.Default.Save();
         }
     }
 }
