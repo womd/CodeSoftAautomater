@@ -30,7 +30,7 @@ namespace codesofttool
             {
                 CefSettings settings = new CefSettings()
                 {
-
+                    
                 };
                 // Initialize cef with the provided settings
                 if(!Cef.IsInitialized)
