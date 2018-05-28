@@ -28,9 +28,12 @@ namespace codesofttool
         {
             try
             {
+               
+
                 CefSettings settings = new CefSettings()
                 {
-                    
+                    IgnoreCertificateErrors = true
+                     
                 };
                 // Initialize cef with the provided settings
                 if(!Cef.IsInitialized)
