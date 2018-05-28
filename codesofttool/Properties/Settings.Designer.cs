@@ -70,17 +70,5 @@ namespace codesofttool.Properties {
                 this["PrinterName"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MTestEnabled {
-            get {
-                return ((bool)(this["MTestEnabled"]));
-            }
-            set {
-                this["MTestEnabled"] = value;
-            }
-        }
     }
 }

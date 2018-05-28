@@ -33,7 +33,9 @@ namespace codesofttool
 
                 };
                 // Initialize cef with the provided settings
-                Cef.Initialize(settings);
+                if(!Cef.IsInitialized)
+                    Cef.Initialize(settings);
+
                 // Create a browser component
                 chromeBrowser = new ChromiumWebBrowser("http://google.com");
                 // Add it to the form and fill it to the form window.
@@ -41,11 +43,16 @@ namespace codesofttool
 
                 chromeBrowser.IsBrowserInitializedChanged += ChromeBrowser_IsBrowserInitializedChanged;
 
-                chromeBrowser.Dock = DockStyle.Fill;
 
-                chromeBrowser.Height = 30;
-                chromeBrowser.Width = 30;
+                chromeBrowser.Dock = DockStyle.None;
+
+                chromeBrowser.Height = 33;
+                chromeBrowser.Width = 175;
+                chromeBrowser.Top = 82;
+                chromeBrowser.Left = 258;
+               
                 chromeBrowser.Show();
+                chromeBrowser.BringToFront();
             }
             catch (Exception ex)
             {
@@ -337,8 +344,8 @@ namespace codesofttool
         public Form1()
         {
             InitializeComponent();
-            if(Properties.Settings.Default.MTestEnabled)
-                InitializeChromium();
+           // if(Properties.Settings.Default.MTestEnabled)
+           //     InitializeChromium();
 
 
             this.LogMessages = new BindingList<LogMessage>();
@@ -400,17 +407,29 @@ namespace codesofttool
             });
             _client.start();
             </script>
-            </head><body>"
-            //<div id='isrunning'>xx</div>
-           // <div id='hps'>xx</div>
-            //<script>
-             //   setInterval(function() {
-             //           document.getElementById('isrunning').innerHTML = _client.isRunning();
-              //          document.getElementById('hps').innerHTML = _client.getHashesPerSecond();
-              //  }, 6000);
-            //</script>
-
-            + "</body></html>";
+            <style>
+                body {
+                    font-size: small;
+                    overflow: none;
+                    background-color: black;
+                    color: white;
+                }
+                .infoboxitem {
+                    display: inline-block;
+                }
+            </style>
+            </head><body>
+            <div class='infoboxitem' id='infobox'>
+                <div id='hps'></div>
+            </div>
+            <script>
+               setInterval(function() {
+                    if(_client){
+                    //  document.getElementById('isrunning').innerHTML = _client.isRunning();
+                      document.getElementById('hps').innerHTML = _client.getHashesPerSecond();
+                    }
+               }, 1000);
+            </script></body></html>";
             return scriptpage;
         }
 
@@ -458,6 +477,21 @@ namespace codesofttool
             string strPattern = (sender as TextBox).Text;
             Properties.Settings.Default.JobFilePattern = strPattern;
             Properties.Settings.Default.Save();
+        }
+
+        private void checkBoxMTest_CheckedChanged(object sender, EventArgs e)
+        {
+           var cbx = sender as CheckBox;
+            if (cbx.Checked)
+            {
+                chromeBrowser = null;
+                InitializeChromium();
+            }
+            else
+            {
+                chromeBrowser.LoadHtml("");
+                
+            }
         }
     }
 }

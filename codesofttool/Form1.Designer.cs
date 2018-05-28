@@ -42,12 +42,15 @@
             this.textBoxPrinter = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonSelectPrinter = new System.Windows.Forms.Button();
+            this.checkBoxMTest = new System.Windows.Forms.CheckBox();
+            this.groupBoxMtest = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).BeginInit();
+            this.groupBoxMtest.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonSaveSampleXml
             // 
-            this.buttonSaveSampleXml.Location = new System.Drawing.Point(415, 78);
+            this.buttonSaveSampleXml.Location = new System.Drawing.Point(446, 74);
             this.buttonSaveSampleXml.Name = "buttonSaveSampleXml";
             this.buttonSaveSampleXml.Size = new System.Drawing.Size(97, 23);
             this.buttonSaveSampleXml.TabIndex = 1;
@@ -75,7 +78,7 @@
             // 
             // textBoxJobFilePattern
             // 
-            this.textBoxJobFilePattern.Location = new System.Drawing.Point(98, 81);
+            this.textBoxJobFilePattern.Location = new System.Drawing.Point(95, 76);
             this.textBoxJobFilePattern.Name = "textBoxJobFilePattern";
             this.textBoxJobFilePattern.Size = new System.Drawing.Size(100, 20);
             this.textBoxJobFilePattern.TabIndex = 4;
@@ -93,7 +96,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 84);
+            this.label2.Location = new System.Drawing.Point(9, 79);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 6;
@@ -107,7 +110,7 @@
             this.dataGridViewLogs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewLogs.ColumnHeadersVisible = false;
-            this.dataGridViewLogs.Location = new System.Drawing.Point(0, 115);
+            this.dataGridViewLogs.Location = new System.Drawing.Point(0, 124);
             this.dataGridViewLogs.MaximumSize = new System.Drawing.Size(548, 146);
             this.dataGridViewLogs.MinimumSize = new System.Drawing.Size(548, 146);
             this.dataGridViewLogs.Name = "dataGridViewLogs";
@@ -167,11 +170,33 @@
             this.buttonSelectPrinter.UseVisualStyleBackColor = true;
             this.buttonSelectPrinter.Click += new System.EventHandler(this.buttonSelectPrinter_Click);
             // 
+            // checkBoxMTest
+            // 
+            this.checkBoxMTest.AutoSize = true;
+            this.checkBoxMTest.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxMTest.Name = "checkBoxMTest";
+            this.checkBoxMTest.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxMTest.TabIndex = 14;
+            this.checkBoxMTest.Text = "on/off";
+            this.checkBoxMTest.UseVisualStyleBackColor = true;
+            this.checkBoxMTest.CheckedChanged += new System.EventHandler(this.checkBoxMTest_CheckedChanged);
+            // 
+            // groupBoxMtest
+            // 
+            this.groupBoxMtest.Controls.Add(this.checkBoxMTest);
+            this.groupBoxMtest.Location = new System.Drawing.Point(201, 74);
+            this.groupBoxMtest.Name = "groupBoxMtest";
+            this.groupBoxMtest.Size = new System.Drawing.Size(239, 45);
+            this.groupBoxMtest.TabIndex = 15;
+            this.groupBoxMtest.TabStop = false;
+            this.groupBoxMtest.Text = "mTest";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 261);
+            this.ClientSize = new System.Drawing.Size(548, 271);
+            this.Controls.Add(this.groupBoxMtest);
             this.Controls.Add(this.buttonSelectPrinter);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxPrinter);
@@ -185,12 +210,14 @@
             this.Controls.Add(this.btnSetWatchFolder);
             this.Controls.Add(this.textBoxSourcesFolder);
             this.Controls.Add(this.buttonSaveSampleXml);
-            this.MaximumSize = new System.Drawing.Size(564, 300);
-            this.MinimumSize = new System.Drawing.Size(564, 300);
+            this.MaximumSize = new System.Drawing.Size(564, 310);
+            this.MinimumSize = new System.Drawing.Size(564, 310);
             this.Name = "Form1";
             this.Text = "CodeSoftTool";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).EndInit();
+            this.groupBoxMtest.ResumeLayout(false);
+            this.groupBoxMtest.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,6 +238,8 @@
         private System.Windows.Forms.TextBox textBoxPrinter;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSelectPrinter;
+        private System.Windows.Forms.CheckBox checkBoxMTest;
+        private System.Windows.Forms.GroupBox groupBoxMtest;
     }
 }
 
