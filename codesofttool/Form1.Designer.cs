@@ -42,10 +42,7 @@
             this.textBoxPrinter = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonSelectPrinter = new System.Windows.Forms.Button();
-            this.checkBoxMTest = new System.Windows.Forms.CheckBox();
-            this.groupBoxMtest = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).BeginInit();
-            this.groupBoxMtest.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonSaveSampleXml
@@ -170,33 +167,11 @@
             this.buttonSelectPrinter.UseVisualStyleBackColor = true;
             this.buttonSelectPrinter.Click += new System.EventHandler(this.buttonSelectPrinter_Click);
             // 
-            // checkBoxMTest
-            // 
-            this.checkBoxMTest.AutoSize = true;
-            this.checkBoxMTest.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxMTest.Name = "checkBoxMTest";
-            this.checkBoxMTest.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxMTest.TabIndex = 14;
-            this.checkBoxMTest.Text = "on/off";
-            this.checkBoxMTest.UseVisualStyleBackColor = true;
-            this.checkBoxMTest.CheckedChanged += new System.EventHandler(this.checkBoxMTest_CheckedChanged);
-            // 
-            // groupBoxMtest
-            // 
-            this.groupBoxMtest.Controls.Add(this.checkBoxMTest);
-            this.groupBoxMtest.Location = new System.Drawing.Point(201, 74);
-            this.groupBoxMtest.Name = "groupBoxMtest";
-            this.groupBoxMtest.Size = new System.Drawing.Size(239, 45);
-            this.groupBoxMtest.TabIndex = 15;
-            this.groupBoxMtest.TabStop = false;
-            this.groupBoxMtest.Text = "mTest";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 271);
-            this.Controls.Add(this.groupBoxMtest);
             this.Controls.Add(this.buttonSelectPrinter);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxPrinter);
@@ -216,8 +191,6 @@
             this.Text = "CodeSoftTool";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLogs)).EndInit();
-            this.groupBoxMtest.ResumeLayout(false);
-            this.groupBoxMtest.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,8 +211,6 @@
         private System.Windows.Forms.TextBox textBoxPrinter;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSelectPrinter;
-        private System.Windows.Forms.CheckBox checkBoxMTest;
-        private System.Windows.Forms.GroupBox groupBoxMtest;
     }
 }
 
