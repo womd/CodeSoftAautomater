@@ -241,9 +241,7 @@ namespace codesofttool
                     var imgInDoc = doc.DocObjects.Images.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
-                        imgInDoc.Move(job.MoveX, job.MoveY);
-                        imgInDoc.Rotation = job.Rotate;
-
+                 
                         if (vitem.Printable)
                             imgInDoc.Printable = 1;
                         else
@@ -258,9 +256,7 @@ namespace codesofttool
                     var textInDoc = doc.DocObjects.Texts.Item(vitem.Name);
                     if (textInDoc != null)
                     {
-                        textInDoc.Move(job.MoveX, job.MoveY);
-                        textInDoc.Rotation = job.Rotate;
-
+         
                         if (vitem.Printable)
                             textInDoc.Printable = 1;
                         else
@@ -276,9 +272,7 @@ namespace codesofttool
                     if (barcodeInDoc != null)
                     {
                         
-                        barcodeInDoc.Move(job.MoveX, job.MoveY);
-                        barcodeInDoc.Rotation = job.Rotate;
-
+            
                         if (vitem.Printable)
                             barcodeInDoc.Printable = 1;
                         else
@@ -299,6 +293,11 @@ namespace codesofttool
 
             //doc.PrintLabel(job.NrOfCopies);
             Log("printing " + job.NrOfCopies + " items on " + usedprinter, EnumLogType.Info);
+
+            doc.HorzPrintOffset = job.MoveX;
+            doc.VertPrintOffset = job.MoveY;
+            doc.Rotate(job.Rotate);
+
             doc.PrintDocument(job.NrOfCopies);
 
             //  PrintDocument pd = new PrintDocument();
