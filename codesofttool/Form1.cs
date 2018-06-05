@@ -72,6 +72,7 @@ namespace codesofttool
                         Log("executing print....", EnumLogType.Info);
                         executePrintJob(JobFileHelper.loadJob(fileInfo.FullName));
                         Log("executing print finished!", EnumLogType.Info);
+                        MoveFileToArchive(fileInfo);
                     }
                     catch (Exception ex)
                     {
@@ -81,7 +82,7 @@ namespace codesofttool
                     }
 
                     //  System.IO.File.Delete(fileInfo.FullName);
-                    MoveFileToArchive(fileInfo);
+                   
                 }
                 else
                 {
@@ -112,7 +113,7 @@ namespace codesofttool
                 System.IO.Directory.CreateDirectory(archivepath);
             }
             var targetfilename = file.Name + "__" + now.Year + now.Month + now.Day + "_" + now.Hour + now.Minute + now.Second;
-            System.IO.File.Move(file.FullName, archivepath + targetfilename);
+            System.IO.File.Move(file.FullName, archivepath + "\\" + targetfilename);
 
         }
 
@@ -223,6 +224,7 @@ namespace codesofttool
                 var varInDoc = doc.Variables.Item(vitem.Name);
                 if(varInDoc != null)
                 {
+                    
                     if(string.IsNullOrEmpty( vitem.Value) || vitem.Printable == false)
                         doc.Variables.Remove(vitem.Name);
                     else
@@ -231,12 +233,17 @@ namespace codesofttool
                     foundvar = true;
                 }
 
+                
+
                 //look for images
                 if (!foundvar)
                 {
                     var imgInDoc = doc.DocObjects.Images.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
+                        imgInDoc.Move(job.MoveX, job.MoveY);
+                        imgInDoc.Rotation = job.Rotate;
+
                         if (vitem.Printable)
                             imgInDoc.Printable = 1;
                         else
@@ -248,13 +255,16 @@ namespace codesofttool
                 //look for texts
                 if (!foundvar)
                 {
-                    var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
-                    if (imgInDoc != null)
+                    var textInDoc = doc.DocObjects.Texts.Item(vitem.Name);
+                    if (textInDoc != null)
                     {
+                        textInDoc.Move(job.MoveX, job.MoveY);
+                        textInDoc.Rotation = job.Rotate;
+
                         if (vitem.Printable)
-                            imgInDoc.Printable = 1;
+                            textInDoc.Printable = 1;
                         else
-                            imgInDoc.Printable = 0;
+                            textInDoc.Printable = 0;
                         
                         foundvar = true;
                     }
@@ -262,16 +272,23 @@ namespace codesofttool
                 //loo for barcodes
                 if (!foundvar)
                 {
-                    var imgInDoc = doc.DocObjects.Texts.Item(vitem.Name);
-                    if (imgInDoc != null)
+                    var barcodeInDoc = doc.DocObjects.Barcodes.Item(vitem.Name);
+                    if (barcodeInDoc != null)
                     {
+                        
+                        barcodeInDoc.Move(job.MoveX, job.MoveY);
+                        barcodeInDoc.Rotation = job.Rotate;
+
                         if (vitem.Printable)
-                            imgInDoc.Printable = 1;
+                            barcodeInDoc.Printable = 1;
                         else
-                            imgInDoc.Printable = 0;
+                            barcodeInDoc.Printable = 0;
                         foundvar = true;
                     }
                 }
+
+
+                
 
 
                 Log("element not found in document " + vitem.Name , EnumLogType.Debug);

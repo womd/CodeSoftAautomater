@@ -25,6 +25,9 @@ namespace codesofttool
             subReq.PrinterName = "TestPrinter";
             subReq.UseDefaultPrinter = true;
             subReq.NrOfCopies = 1;
+            subReq.MoveX = 0;
+            subReq.MoveY = 0;
+            subReq.Rotate = 0;
             subReq.Variables = new List<Variable>();
             subReq.Variables.Add(new Variable() { Name = "var0", Value = "var 0 valule", Printable = true });
             subReq.Variables.Add(new Variable() { Name = "var1", Value = "var 1 value", Printable = true });
@@ -66,6 +69,9 @@ namespace codesofttool
         /// Variable will be overwritten in printed document...
         /// </summary>
         public List<Variable> Variables { get; set; }
+        public int MoveX { get; set; }
+        public int MoveY { get; set; }
+        public int Rotate { get; set; }
     }
 
 
