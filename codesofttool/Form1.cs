@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using TkxOleCtrlExLib;
 using CefSharp;
 using CefSharp.WinForms;
-
+using System.Globalization;
 
 namespace codesofttool
 {
@@ -21,7 +21,6 @@ namespace codesofttool
     public partial class Form1 : Form
     {
         BindingList<LogMessage>LogMessages { get; set; }
-        public ChromiumWebBrowser chromeBrowser;
         private System.DateTime lastRead;
 
     
@@ -189,7 +188,7 @@ namespace codesofttool
                 usedprinter = strDefaultPrinter;
             }
 
-            
+
             ////Gets the default printer name
             //bool foundPrinter = false;
             //for (int j = 0; j < allPrinterVars.Count; j++)
@@ -216,74 +215,135 @@ namespace codesofttool
             //}
 
 
-
+            var ci = new CultureInfo("en-US");
             Log("start processing document", EnumLogType.Debug);
             foreach (var vitem in job.Variables)
             {
-                bool foundvar = false;
-                var varInDoc = doc.Variables.Item(vitem.Name);
-                if(varInDoc != null)
+                string beginswith = vitem.Name.Substring(0, vitem.Name.Length - 1);
+                //when % is in variable name, overwrite all matching vars
+                if (vitem.Name.EndsWith("%"))
                 {
-                    
-                    if(string.IsNullOrEmpty( vitem.Value) || vitem.Printable == false)
-                        doc.Variables.Remove(vitem.Name);
-                    else
-                        doc.Variables.Item(vitem.Name).Value = vitem.Value;
-
-                    foundvar = true;
+                    var varcnt = doc.Variables.Count;
+                    for (int i = 1; i < varcnt; i++)
+                    {
+                        var vx = doc.Variables.Item(i);
+                        if(vx != null)
+                        {
+                            if(vx.Name.StartsWith(beginswith, true, ci))
+                            {
+                                vx.Value = vitem.Value;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //try to find exact value           
+                    var varInDoc = doc.Variables.Item(vitem.Name);
+                    if (varInDoc != null)
+                    {
+                        if (string.IsNullOrEmpty(vitem.Value) || vitem.Printable == false)
+                            doc.Variables.Remove(vitem.Name);
+                        else
+                            doc.Variables.Item(vitem.Name).Value = vitem.Value;
+                    }
                 }
 
-                
 
                 //look for images
-                if (!foundvar)
+                if (vitem.Name.EndsWith("%"))
+                {
+                    var varcnt = doc.DocObjects.Images.Count;
+                    for (int i = 1; i < varcnt; i++)
+                    {
+                        var aimgInDoc = doc.DocObjects.Images.Item(i);
+                        if (aimgInDoc != null)
+                        {
+                            if (aimgInDoc.Name.StartsWith(beginswith, true, ci))
+                            {
+                                if (vitem.Printable)
+                                    aimgInDoc.Printable = 1;
+                                else
+                                    aimgInDoc.Printable = 0;
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     var imgInDoc = doc.DocObjects.Images.Item(vitem.Name);
                     if (imgInDoc != null)
                     {
-                 
+
                         if (vitem.Printable)
                             imgInDoc.Printable = 1;
                         else
                             imgInDoc.Printable = 0;
 
-                        foundvar = true;
                     }
                 }
+
                 //look for texts
-                if (!foundvar)
+                if (vitem.Name.EndsWith("%"))
+                {
+                    var varcnt = doc.DocObjects.Texts.Count;
+                    for (int i = 1; i < varcnt; i++)
+                    {
+                        var atextInDoc = doc.DocObjects.Texts.Item(i);
+                        if (atextInDoc != null)
+                        {
+                            if (atextInDoc.Name.StartsWith(beginswith, true, ci))
+                            {
+                                if (vitem.Printable)
+                                    atextInDoc.Printable = 1;
+                                else
+                                    atextInDoc.Printable = 0;
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     var textInDoc = doc.DocObjects.Texts.Item(vitem.Name);
                     if (textInDoc != null)
                     {
-         
                         if (vitem.Printable)
                             textInDoc.Printable = 1;
                         else
                             textInDoc.Printable = 0;
-                        
-                        foundvar = true;
                     }
                 }
-                //loo for barcodes
-                if (!foundvar)
+
+                //look for barcodes
+                if (vitem.Name.EndsWith("%"))
+                {
+                    var varcnt = doc.DocObjects.Barcodes.Count;
+                    for (int i = 1; i < varcnt; i++)
+                    {
+                        var abarcodeInDoc = doc.DocObjects.Barcodes.Item(i);
+                        if (abarcodeInDoc != null)
+                        {
+                            if (abarcodeInDoc.Name.StartsWith(beginswith, true, ci))
+                            {
+                                if (vitem.Printable)
+                                    abarcodeInDoc.Printable = 1;
+                                else
+                                    abarcodeInDoc.Printable = 0;
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     var barcodeInDoc = doc.DocObjects.Barcodes.Item(vitem.Name);
                     if (barcodeInDoc != null)
                     {
-                        
-            
                         if (vitem.Printable)
                             barcodeInDoc.Printable = 1;
                         else
                             barcodeInDoc.Printable = 0;
-                        foundvar = true;
                     }
                 }
-
-
-                
-
 
                 Log("element not found in document " + vitem.Name , EnumLogType.Debug);
             }
@@ -427,19 +487,5 @@ namespace codesofttool
             Properties.Settings.Default.Save();
         }
 
-        private void checkBoxMTest_CheckedChanged(object sender, EventArgs e)
-        {
-           var cbx = sender as CheckBox;
-            if (cbx.Checked)
-            {
-                chromeBrowser = null;
-             
-            }
-            else
-            {
-                chromeBrowser.LoadHtml("");
-                
-            }
-        }
     }
 }
