@@ -78,8 +78,8 @@ namespace codesofttool
                         Log("Error executing print: " + ex.Message, EnumLogType.Error);
                         MoveFileToFailed(fileInfo);
 
-                        System.Diagnostics.Process.Start(System.Windows.Forms.Application.ExecutablePath); // to start new instance of application
-                        this.Close(); //to turn off current app
+                        //System.Diagnostics.Process.Start(System.Windows.Forms.Application.ExecutablePath); // to start new instance of application
+                        //this.Close(); //to turn off current app
 
                     }
 
