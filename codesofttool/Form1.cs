@@ -44,6 +44,51 @@ namespace codesofttool
         }
 
         
+        private void DoPrintJob(FileSystemEventArgs e)
+        {
+
+            var fileInfo = new System.IO.FileInfo(e.FullPath);
+            string acceptpattern = Properties.Settings.Default.JobFilePattern;
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(acceptpattern);
+
+            Log("SourceDirectory " + e.ChangeType.ToString() + " File: " + e.Name, EnumLogType.Info);
+            if (regex.IsMatch(fileInfo.Name))
+            {
+                try
+                {
+                    Log("executing print....", EnumLogType.Info);
+                    if (executePrintJob(JobFileHelper.loadJob(fileInfo.FullName)))
+                    {
+                        Log("executing print finished!", EnumLogType.Info);
+                        MoveFileToArchive(fileInfo);
+                    }
+                    else
+                    {
+                        MoveFileToFailed(fileInfo);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Log("Error executing print: " + ex.Message, EnumLogType.Error);
+                    MoveFileToFailed(fileInfo);
+
+                    //System.Diagnostics.Process.Start(System.Windows.Forms.Application.ExecutablePath); // to start new instance of application
+                    //this.Close(); //to turn off current app
+
+                }
+
+                //  System.IO.File.Delete(fileInfo.FullName);
+
+            }
+            else
+            {
+                Log("Filename not matching pattern - ignored." + e.Name, EnumLogType.Debug);
+            }
+            return;
+        }
+
+        
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             if ( e.ChangeType == WatcherChangeTypes.Changed || e.ChangeType == WatcherChangeTypes.Created )
@@ -59,37 +104,7 @@ namespace codesofttool
 
                 lastRead = lastWriteTime;
 
-                var fileInfo = new System.IO.FileInfo(e.FullPath);
-                string acceptpattern = Properties.Settings.Default.JobFilePattern;
-                System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(acceptpattern);
-
-                Log("SourceDirectory " + e.ChangeType.ToString() + " File: " + e.Name, EnumLogType.Info);
-                if (regex.IsMatch(fileInfo.Name))
-                {
-                    try
-                    {
-                        Log("executing print....", EnumLogType.Info);
-                        executePrintJob(JobFileHelper.loadJob(fileInfo.FullName));
-                        Log("executing print finished!", EnumLogType.Info);
-                        MoveFileToArchive(fileInfo);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log("Error executing print: " + ex.Message, EnumLogType.Error);
-                        MoveFileToFailed(fileInfo);
-
-                        //System.Diagnostics.Process.Start(System.Windows.Forms.Application.ExecutablePath); // to start new instance of application
-                        //this.Close(); //to turn off current app
-
-                    }
-
-                    //  System.IO.File.Delete(fileInfo.FullName);
-                   
-                }
-                else
-                {
-                    Log("Filename not matching pattern - ignored." + e.Name, EnumLogType.Debug);
-                }
+                Task.Run(() => DoPrintJob(e));
 
             }
         }
@@ -147,14 +162,14 @@ namespace codesofttool
           
         }
 
-        private void executePrintJob(JobFile job)
+        private bool executePrintJob(JobFile job)
         {
 
             string strFile = Path.Combine(Properties.Settings.Default.LabFilesPath,job.LabelDocument);
             if (!System.IO.File.Exists(strFile))
             {
                  Log(".Lab file: " + strFile + " not found: ",EnumLogType.Error);
-                return;
+                return false;
                 
             }
 
@@ -164,7 +179,7 @@ namespace codesofttool
             if(lbl.ActiveDocument == null)
             {
                 Log("Could not get active document from Labfile ( CodeSoft Version? )", EnumLogType.Error);
-                return;
+                return false;
             }
            
             var doc = lbl.ActiveDocument;
@@ -227,7 +242,7 @@ namespace codesofttool
                 if (vitem.Name.EndsWith("%"))
                 {
                     var varcnt = doc.Variables.Count;
-                    for (int i = 1; i < varcnt; i++)
+                    for (int i = 1; i <= varcnt; i++)
                     {
                         var vx = doc.Variables.Item(i);
                         if(vx != null)
@@ -257,7 +272,7 @@ namespace codesofttool
                 if (vitem.Name.EndsWith("%"))
                 {
                     var varcnt = doc.DocObjects.Images.Count;
-                    for (int i = 1; i < varcnt; i++)
+                    for (int i = 1; i <= varcnt; i++)
                     {
                         var aimgInDoc = doc.DocObjects.Images.Item(i);
                         if (aimgInDoc != null)
@@ -290,7 +305,7 @@ namespace codesofttool
                 if (vitem.Name.EndsWith("%"))
                 {
                     var varcnt = doc.DocObjects.Texts.Count;
-                    for (int i = 1; i < varcnt; i++)
+                    for (int i = 1; i <= varcnt; i++)
                     {
                         var atextInDoc = doc.DocObjects.Texts.Item(i);
                         if (atextInDoc != null)
@@ -321,7 +336,7 @@ namespace codesofttool
                 if (vitem.Name.EndsWith("%"))
                 {
                     var varcnt = doc.DocObjects.Barcodes.Count;
-                    for (int i = 1; i < varcnt; i++)
+                    for (int i = 1; i <= varcnt; i++)
                     {
                         var abarcodeInDoc = doc.DocObjects.Barcodes.Item(i);
                         if (abarcodeInDoc != null)
@@ -383,6 +398,7 @@ namespace codesofttool
             //    doc.FormFeed();
             //    lbl.Quit();
             //}
+            return true;
         }
 
     
