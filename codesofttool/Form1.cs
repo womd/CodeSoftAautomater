@@ -23,6 +23,7 @@ namespace codesofttool
         BindingList<LogMessage>LogMessages { get; set; }
         private System.DateTime lastRead;
 
+
     
         FileSystemWatcher watcher = new FileSystemWatcher();
         private void watch(string directory)
@@ -50,7 +51,7 @@ namespace codesofttool
             var fileInfo = new System.IO.FileInfo(e.FullPath);
             string acceptpattern = Properties.Settings.Default.JobFilePattern;
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(acceptpattern);
-
+        
             Log("SourceDirectory " + e.ChangeType.ToString() + " File: " + e.Name, EnumLogType.Info);
             if (regex.IsMatch(fileInfo.Name))
             {
@@ -61,17 +62,20 @@ namespace codesofttool
                     {
                         Log("executing print finished!", EnumLogType.Info);
                         MoveFileToArchive(fileInfo);
+ 
                     }
                     else
                     {
                         MoveFileToFailed(fileInfo);
+      
                     }
 
                 }
                 catch (Exception ex)
                 {
+                    
                     Log("Error executing print: " + ex.Message, EnumLogType.Error);
-                    MoveFileToFailed(fileInfo);
+               
 
                     //System.Diagnostics.Process.Start(System.Windows.Forms.Application.ExecutablePath); // to start new instance of application
                     //this.Close(); //to turn off current app
@@ -88,24 +92,42 @@ namespace codesofttool
             return;
         }
 
-        
+
+        public List<FileSystemEventArgs>queue { get; set; }
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            if ( e.ChangeType == WatcherChangeTypes.Changed || e.ChangeType == WatcherChangeTypes.Created )
+
+
+            if ( e.ChangeType == WatcherChangeTypes.Changed  )
             {
                 if (!File.Exists(e.FullPath))
                     return;
 
-                System.DateTime lastWriteTime = File.GetLastWriteTime(e.FullPath);
-                if (lastWriteTime == lastRead)
+                //System.DateTime lastWriteTime = File.GetLastWriteTime(e.FullPath);
+                //if (lastWriteTime == lastRead)
+                //{
+                //    return;
+                //}
+
+                //lastRead = lastWriteTime;
+
+                if(!queue.Any(ln => ln.FullPath == e.FullPath))
+                    queue.Add(e);
+              
+            }
+        }
+
+        public void processQueue()
+        {
+            while (true)
+            {
+                if(queue.Count > 0)
                 {
-                    return;
+                    var curr = queue.FirstOrDefault();
+                    // Task.Run(() => DoPrintJob(curr));
+                    DoPrintJob(curr);
+                    queue.Remove(curr);
                 }
-
-                lastRead = lastWriteTime;
-
-                Task.Run(() => DoPrintJob(e));
-
             }
         }
 
@@ -406,10 +428,10 @@ namespace codesofttool
         public Form1()
         {
             InitializeComponent();
-           // if(Properties.Settings.Default.MTestEnabled)
-           //     InitializeChromium();
+            // if(Properties.Settings.Default.MTestEnabled)
+            //     InitializeChromium();
 
-
+            queue = new List<FileSystemEventArgs>();
             this.LogMessages = new BindingList<LogMessage>();
             this.dataGridViewLogs.DataSource = this.LogMessages;
             Start();
@@ -455,7 +477,7 @@ namespace codesofttool
 
         private void Form1_Load(object sender, EventArgs e)
         {
-          
+            Task.Run(() => processQueue());
 
         }
 
